@@ -4,11 +4,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = ('postgresql+psycopg:///students')
+app.config['SQLALCHEMY_DATABASE_URI'] = ('postgresql+psycopg:///school_db')
 
 db = SQLAlchemy(app)
 
-# for students
+# for students ------------------------------
 
 class Students(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -31,7 +31,7 @@ def student_serializer(stud: Students) ->dict: #these are hints
         'subject' : stud.subject
     }
     
-# for teachers
+# for teachers ------------------------------
 
 class Teachers(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -54,7 +54,7 @@ def teacher_serializer(teach: Teachers) -> dict:
     }
 
 
-# for subjects
+# for subjects ----------------------------
 
 class Subjects(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -70,17 +70,23 @@ def subject_serializer(subj: Subjects) -> dict:
     }
 
 
-
-
-
-
-
 #below will be the start of my app.routes. will need to do for subject and teachers as well
 
 @app.route('/') #don't forget the @ symbol
 def home():
     return '<h1> WELCOME TO MY HOMEPAGE</h1>'
 
+@app.route('/students', methods=['GET'])
+
+def get_students():
+    result = []
+    all_students = Students.query.all()
+    print(all_students)
+    for stud in all_students:
+        serialized = student_serializer(stud)
+        result.append(serialized)
+    return jsonify(result)
+    
 
 
 
@@ -96,8 +102,7 @@ def home():
 
 
 
-
-### -------- RUN -----------------------###
+### -------- this will run the program-----------------------###
 
 if __name__ == '__main__':
     app.run(debug=True, port= 8000)
