@@ -15,7 +15,10 @@ class Students(db.Model):
     first_name = db.Column(db.String(255))
     last_name = db.Column(db.String(255))
     age = db.Column(db.Integer)
-    subject = db.Column(db.Integer)
+    subject_id = db.Column(db.Integer, db.ForeignKey('subjects.id'))
+    subject = db.relationship('Subjects', backref='students')
+    teachers_id = db.Column(db.Integer, db.ForeignKey('teachers.id'))
+    teacher = db.relationship('Teachers', backref='students')
     
     def __repr__(self):
         return f'{self.id} {self.first_name} - for students'
@@ -28,7 +31,7 @@ def student_serializer(stud: Students) ->dict: #these are hints
         'first_name' : stud.first_name,
         'last_name' : stud.last_name,
         'age' : stud.age,
-        'subject' : stud.subject
+        'subject' : stud.subject.subject
     }
     
 # for teachers ------------------------------
@@ -38,7 +41,9 @@ class Teachers(db.Model):
     first_name = db.Column(db.String(255))
     last_name = db.Column(db.String(255))
     age = db.Column(db.Integer)
-    subject = db.Column(db.Integer)   
+    subject_id = db.Column(db.Integer, db.ForeignKey('subjects.id')) 
+    subject = db.relationship('Subjects', backref = 'teachers')  
+       
     
     def __repr__(self):
         return f'{self.id} {self.first_name} - for teachers' 
@@ -50,7 +55,7 @@ def teacher_serializer(teach: Teachers) -> dict:
         'first_name' : teach.first_name,
         'last_name' : teach.last_name,
         'age' : teach.age,
-        'subject' : teach.subject        
+        'subject' : teach.subject.subject        
     }
 
 
@@ -86,6 +91,29 @@ def get_students():
         serialized = student_serializer(stud)
         result.append(serialized)
     return jsonify(result)
+
+@app.route('/teachers', methods = ['GET'])
+
+def get_teachers():
+    result = []
+    all_teachers = Teachers.query.all()
+    print(all_teachers)
+    for teach in all_teachers:
+        serialized = teacher_serializer(teach)
+        result.append(serialized)
+    return jsonify(result)
+
+
+@app.route('/subjects', methods= ['GET'])
+def get_subjects():
+    result = []
+    all_subjects = Subjects.query.all()
+    print(all_subjects)
+    for subj in all_subjects:
+        serialized = subject_serializer(subj)
+        result.append(serialized)
+    return jsonify(result)
+
     
 
 
@@ -105,4 +133,4 @@ def get_students():
 ### -------- this will run the program-----------------------###
 
 if __name__ == '__main__':
-    app.run(debug=True, port= 8000)
+    app.run(debug=True, port= 5000)

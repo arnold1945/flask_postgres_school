@@ -28,7 +28,7 @@ CREATE TABLE teachers (
     age INTEGER,
     subject varchar(255)
 );
---below connects sql file to the csv files
+--csv files and sql connection --
 \COPY students FROM 'data/student.csv' DELIMITER ',' CSV HEADER;
 \COPY subjects FROM 'data/subjects.csv' DELIMITER ',' CSV HEADER;
 \COPY teachers FROM 'data/teachers.csv' DELIMITER ',' CSV HEADER;
