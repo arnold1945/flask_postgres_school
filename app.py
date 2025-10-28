@@ -84,34 +84,47 @@ def home():
 @app.route('/students', methods=['GET'])
 
 def get_students():
-    result = []
+    # result = []
     all_students = Students.query.all()
-    print(all_students)
-    for stud in all_students:
-        serialized = student_serializer(stud)
-        result.append(serialized)
+    # print(all_students)
+    # for stud in all_students:
+    #     serialized = student_serializer(stud)
+    #     result.append(serialized)
+    # return jsonify(result)
+    
+    ## code below is the refactored code above
+    result = [student_serializer(stud) for stud in all_students]
     return jsonify(result)
+    
 
 @app.route('/teachers', methods = ['GET'])
 
 def get_teachers():
-    result = []
+    # result = []
     all_teachers = Teachers.query.all()
-    print(all_teachers)
-    for teach in all_teachers:
-        serialized = teacher_serializer(teach)
-        result.append(serialized)
+    # print(all_teachers)
+    # for teach in all_teachers:
+    #     serialized = teacher_serializer(teach)
+    #     result.append(serialized)
+    # return jsonify(result)
+    
+    ## code below is the refactored code from above
+    result = [teacher_serializer(teach) for teach in all_teachers]
     return jsonify(result)
 
 
 @app.route('/subjects', methods= ['GET'])
 def get_subjects():
-    result = []
+    # result = []
     all_subjects = Subjects.query.all()
-    print(all_subjects)
-    for subj in all_subjects:
-        serialized = subject_serializer(subj)
-        result.append(serialized)
+    # print(all_subjects)
+    # for subj in all_subjects:
+    #     serialized = subject_serializer(subj)
+    #     result.append(serialized)
+    # return jsonify(result)
+    
+    ##code below is the refactored code above
+    result = [subject_serializer(subj) for subj in all_subjects]
     return jsonify(result)
 
     
